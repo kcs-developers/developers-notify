@@ -1,0 +1,18 @@
+User 의 이름과 구독하고 있는 엔드포인트 들을 리스트로 저장
+    - 사용자 로그인이 성공했을 경우 DB에서 구독 엔드포인트를 클라이언트로 반환
+    - 사용자 재접속 혹은 브라우저 새로고침에 미수신 메시지가 있을 경우 반환
+    @GetMapping("/loadMessages")
+    public ResponseEntity<List<String>> loadMessages(@RequestParam String username) {
+        User user = getUserFromDatabase(username);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        List<String> messages = new ArrayList<>();
+        for (String queueName : user.getSubscriptions()) {
+            String message;
+            while ((message = (String) rabbitTemplate.receiveAndConvert(queueName, 1000)) != null) {
+                messages.add(message);
+            }
+        }
+        return ResponseEntity.ok(messages);
+    }
