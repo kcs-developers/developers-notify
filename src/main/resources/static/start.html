@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>멘토 구독과 알림 받는 테스트</title>
+</head>
+<body>
+<h1>
+    멘토 구독
+</h1>
+<div>
+    <div>
+        <h4>mentor1</h4>
+        <button id="subscribe">구독</button>
+    </div>
+</div>
+<h1>
+    스케쥴링
+</h1>
+<div>
+    <div>
+        <h4>mentor1</h4>
+        <button id="schedule">구독</button>
+    </div>
+</div>
+<h1>멘토 발행</h1>
+<div>
+    <button id="publish">발행</button>
+</div>
+<h1>구독된 메시지 가져오기</h1>
+<div>
+    <button id="getSubscriptions">가져오기</button>
+    <div id="messages"></div>
+</div>
+<script>
+    const userId = "user1"; // 변경 가능한 사용자 ID
+    const subscribeBtn = document.getElementById("subscribe");
+    const publishBtn = document.getElementById("publish");
+    const getSubscriptionsBtn = document.getElementById("getSubscriptions");
+    const messagesDiv = document.getElementById("messages");
+    const schedule = document.getElementById("schedule");
+
+    // sse 메시지 수신
+    function subscribe() {
+        const source = new EventSource("http://localhost:8080/api/subscribe");
+
+        source.onmessage = function (event) {
+            console.log("Received message:", event.data);
+        };
+
+        source.onerror = function (event) {
+            console.log("Error:", event);
+        };
+    }
+
+    // window.addEventListener("load", subscribe);
+
+    schedule.addEventListener("click", () => {
+        fetch(`http://localhost:8080/api/subscribe/schedule`)
+            .then(res=>console.log(res))
+            .catch(err=>console.error(err))
+    })
+    subscribeBtn.addEventListener("click", () => {
+        // fetch(`http://localhost:8080/api/subscribe?userId=user1`, {
+        //     method: "POST"
+        // })
+        //     .then(res => {
+        //         if (res.ok) {
+        //             console.log("구독 성공");
+        //         } else {
+        //             console.error("구독 실패");
+        //         }
+        //     })
+        //     .catch(err => console.error(err));
+        fetch(`http://localhost:8080/api/subscribe`)
+            .then(res => {
+                if(res.status === 200) {
+                    console.log("메시지 수신 완료!")
+                }else{
+                    console.log("메시지 받을 수 없는 상태!")
+                }
+            })
+            .catch(err => console.error(err));
+    });
+
+    publishBtn.addEventListener("click", () => {
+        fetch("http://localhost:8080/api/publish")
+            .then(res => console.log("메시지 발행 성공!"))
+            .catch(err => console.error("메시지 발행 실패!"));
+    });
+
+    getSubscriptionsBtn.addEventListener("click", () => {
+        fetch(`http://localhost:8080/api/getSubscriptions?userId=user1`)
+            .then(res => res.text())
+            .then(text => {
+                if (text) {
+                    const message = document.createElement("p");
+                    message.innerText = text;
+                    messagesDiv.appendChild(message);
+                }
+            })
+            .catch(err => console.error(err));
+    });
+</script>
+</body>
+</html>
