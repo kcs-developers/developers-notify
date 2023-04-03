@@ -40,12 +40,19 @@
     const messagesDiv = document.getElementById("messages");
     const schedule = document.getElementById("schedule");
 
+    let source = null;
     // sse 메시지 수신
     function subscribe() {
-        const source = new EventSource("http://localhost:8080/api/subscribe");
+        if (source !== null) {
+            // 이미 SSE 연결이 맺어져 있으면, 다시 맺지 않고 기존 연결을 계속 사용합니다.
+            console.log(source);
+            return;
+        }
+        source = new EventSource("http://localhost:8080/api/subscribe?mentorId=mentor1");
 
         source.onmessage = function (event) {
             console.log("Received message:", event.data);
+            showNotification("새로운 알림: " + event.data);
         };
 
         source.onerror = function (event) {
@@ -53,29 +60,51 @@
         };
     }
 
+    function showFallbackNotification(message) {
+        alert(message);
+    }
+
+    function showNotification(message) {
+        if (!("Notification" in window)) {
+            console.error("This browser does not support desktop notifications.");
+            showFallbackNotification("새로운 알림: " + message);
+        } else if (Notification.permission === "granted") {
+            new Notification(message);
+        } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then((permission) => {
+                if (permission === "granted") {
+                    new Notification(message);
+                }
+            });
+        }
+    }
+
     // window.addEventListener("load", subscribe);
 
     schedule.addEventListener("click", () => {
-        fetch(`http://localhost:8080/api/subscribe/schedule`)
-            .then(res=>console.log(res))
-            .catch(err=>console.error(err))
-    })
+        const mentorId = "mentor1";
+        const time = "202304032310";
+        const eventSource = new EventSource(`http://localhost:8080/api/subscribe/schedule?mentorId=${mentorId}&time=${time}`);
+
+        eventSource.onmessage = (event) => {
+            console.log("Message received: ", event.data);
+            showNotification("새로운 알림: " + event.data);
+        };
+
+        eventSource.onerror = (error) => {
+            console.error("Error: ", error);
+        };
+    });
+
     subscribeBtn.addEventListener("click", () => {
-        // fetch(`http://localhost:8080/api/subscribe?userId=user1`, {
-        //     method: "POST"
-        // })
-        //     .then(res => {
-        //         if (res.ok) {
-        //             console.log("구독 성공");
-        //         } else {
-        //             console.error("구독 실패");
-        //         }
-        //     })
-        //     .catch(err => console.error(err));
-        fetch(`http://localhost:8080/api/subscribe`)
+        fetch(`http://localhost:8080/api/subscribe?mentorId=mentor1`,{
+            headers: {
+                'Accept': 'text/event-stream'
+            }})
             .then(res => {
-                if(res.status === 200) {
+                if(res.ok) {
                     console.log("메시지 수신 완료!")
+                    subscribe();
                 }else{
                     console.log("메시지 받을 수 없는 상태!")
                 }
@@ -84,22 +113,9 @@
     });
 
     publishBtn.addEventListener("click", () => {
-        fetch("http://localhost:8080/api/publish")
+        fetch("http://localhost:8080/api/publish?mentorId=mentor1")
             .then(res => console.log("메시지 발행 성공!"))
             .catch(err => console.error("메시지 발행 실패!"));
-    });
-
-    getSubscriptionsBtn.addEventListener("click", () => {
-        fetch(`http://localhost:8080/api/getSubscriptions?userId=user1`)
-            .then(res => res.text())
-            .then(text => {
-                if (text) {
-                    const message = document.createElement("p");
-                    message.innerText = text;
-                    messagesDiv.appendChild(message);
-                }
-            })
-            .catch(err => console.error(err));
     });
 </script>
 </body>

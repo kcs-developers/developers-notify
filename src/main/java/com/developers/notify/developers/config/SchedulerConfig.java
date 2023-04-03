@@ -11,6 +11,6 @@ public class SchedulerConfig {
     @Bean
     public ScheduledExecutorService scheduledExecutorService() {
         // 스레드 풀 크기 조절?
-        return Executors.newScheduledThreadPool(8);
+        return Executors.newScheduledThreadPool(2);
     }
 }
