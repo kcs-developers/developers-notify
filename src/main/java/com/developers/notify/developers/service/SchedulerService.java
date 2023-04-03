@@ -18,11 +18,11 @@ public class SchedulerService {
     private final MessageService messageService;
 
 
-    public void scheduleNotify(LocalDateTime notificationTime, String queName, SseEmitter emitter){
+    public void scheduleNotify(LocalDateTime notificationTime, String queName, Long userId, SseEmitter emitter){
         long delay = Duration.between(LocalDateTime.now(), notificationTime.minusMinutes(5)).toMillis();
         System.out.println(delay+"에 전달 예정!");
         scheduledExecutorService.schedule(() -> {
-            messageService.subscribeToMessages(queName, emitter);
+            messageService.subscribeToMessages(queName, userId, emitter);
         }, delay, TimeUnit.MILLISECONDS);
     }
 }
