@@ -24,15 +24,15 @@ public class MessageService {
     //fluxsink 를 통해 구독한 대상에게 .next 로 전달
     private final ConnectionFactory connectionFactory;
 
-    private final UserSubscribeRepository userSubscribeRepository;
+//    private final UserSubscribeRepository userSubscribeRepository;
 
-    private final Map<Long, SseEmitter> userEmitters = new ConcurrentHashMap<>();
+    private final Map<String, SseEmitter> userEmitters = new ConcurrentHashMap<>();
 
-    public void subscribeToMessages(String queueName, Long userId, SseEmitter emitter) {
+    public void subscribeToMessages(String queueName, String userName, SseEmitter emitter) {
         // 큐에 대한 구독
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
         container.setQueueNames(queueName);
-        userEmitters.put(userId, emitter);
+        userEmitters.put(userName, emitter);
         // 수신 메시지 처리
         container.setMessageListener((MessageListener) message -> {
             String payload = new String(message.getBody(), StandardCharsets.UTF_8);

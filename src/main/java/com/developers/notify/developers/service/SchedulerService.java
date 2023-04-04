@@ -1,6 +1,7 @@
 package com.developers.notify.developers.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import reactor.core.publisher.Flux;
@@ -13,16 +14,17 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @AllArgsConstructor
+@Log4j2
 public class SchedulerService {
     private final ScheduledExecutorService scheduledExecutorService;
     private final MessageService messageService;
 
 
-    public void scheduleNotify(LocalDateTime notificationTime, String queName, Long userId, SseEmitter emitter){
-        long delay = Duration.between(LocalDateTime.now(), notificationTime.minusMinutes(5)).toMillis();
-        System.out.println(delay+"에 전달 예정!");
+    public void scheduleNotify(LocalDateTime notificationTime, String queName, String userName, SseEmitter emitter){
+        long delay = Duration.between(LocalDateTime.now(), notificationTime.minusMinutes(10)).toMillis();
+        log.info("---메시지 발송 예약---");
         scheduledExecutorService.schedule(() -> {
-            messageService.subscribeToMessages(queName, userId, emitter);
+            messageService.subscribeToMessages(queName, userName, emitter);
         }, delay, TimeUnit.MILLISECONDS);
     }
 }
