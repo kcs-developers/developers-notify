@@ -48,7 +48,7 @@
             console.log(source);
             return;
         }
-        source = new EventSource("http://localhost:8080/api/subscribe?mentorId=mentor1");
+        source = new EventSource("http://localhost:8080/api/subscribe?mentorId=mentor1&userId=123");
 
         source.onmessage = function (event) {
             console.log("Received message:", event.data);
@@ -97,7 +97,7 @@
     });
 
     subscribeBtn.addEventListener("click", () => {
-        fetch(`http://localhost:8080/api/subscribe?mentorId=mentor1`,{
+        fetch(`http://localhost:8080/api/subscribe?mentorId=mentor1&userId=123`,{
             headers: {
                 'Accept': 'text/event-stream'
             }})
