@@ -1,4 +1,4 @@
-package com.developers.notify.developers.service;
+package com.developers.notify.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;

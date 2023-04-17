@@ -1,8 +1,7 @@
-package com.developers.notify.developers.repository;
+package com.developers.notify.repository;
 
-import com.developers.notify.developers.entity.Subscription;
+import com.developers.notify.entity.Subscription;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

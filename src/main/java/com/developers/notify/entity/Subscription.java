@@ -1,4 +1,4 @@
-package com.developers.notify.developers.entity;
+package com.developers.notify.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

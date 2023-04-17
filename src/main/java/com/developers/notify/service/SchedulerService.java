@@ -1,13 +1,10 @@
-package com.developers.notify.developers.service;
+package com.developers.notify.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import reactor.core.publisher.Flux;
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.concurrent.ScheduledExecutorService;

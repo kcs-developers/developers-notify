@@ -1,8 +1,8 @@
-package com.developers.notify.developers.service;
+package com.developers.notify.service;
 
-import com.developers.notify.developers.dto.PublishMentorRequest;
-import com.developers.notify.developers.entity.Subscription;
-import com.developers.notify.developers.repository.UserSubscribeRepository;
+import com.developers.notify.dto.PublishMentorRequest;
+import com.developers.notify.entity.Subscription;
+import com.developers.notify.repository.UserSubscribeRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.core.*;

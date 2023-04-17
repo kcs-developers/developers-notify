@@ -1,8 +1,8 @@
-package com.developers.notify.developers.service;
+package com.developers.notify.service;
 
-import com.developers.notify.developers.dto.PublishScheduleMentorRequest;
-import com.developers.notify.developers.entity.SubscriptionSchedule;
-import com.developers.notify.developers.repository.UserSubscribeScheduleRepository;
+import com.developers.notify.dto.PublishScheduleMentorRequest;
+import com.developers.notify.entity.SubscriptionSchedule;
+import com.developers.notify.repository.UserSubscribeScheduleRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.core.*;

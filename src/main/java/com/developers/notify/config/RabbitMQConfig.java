@@ -1,4 +1,4 @@
-package com.developers.notify.developers.config;
+package com.developers.notify.config;
 
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
