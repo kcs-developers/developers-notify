@@ -7,6 +7,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import reactor.core.publisher.Flux;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.concurrent.ScheduledExecutorService;
@@ -20,11 +21,15 @@ public class SchedulerService {
     private final MessageService messageService;
 
 
-    public void scheduleNotify(LocalDateTime notificationTime, String queName, String userName, SseEmitter emitter){
+    public void scheduleNotify(LocalDateTime notificationTime, String queName, String userName, SseEmitter emitter, String email){
         long delay = Duration.between(LocalDateTime.now(), notificationTime.minusMinutes(10)).toMillis();
-        log.info("---메시지 발송 예약---");
+        log.info("---메시지 발송 예약---"+delay);
         scheduledExecutorService.schedule(() -> {
-            messageService.subscribeToMessages(queName, userName, emitter);
+            try {
+                messageService.subscribeToMessages(queName, userName, emitter, email);
+            } catch (Exception e) {
+                throw new RuntimeException(e.getMessage());
+            }
         }, delay, TimeUnit.MILLISECONDS);
     }
 }

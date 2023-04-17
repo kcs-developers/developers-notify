@@ -6,20 +6,21 @@ import lombok.*;
 @Entity
 @NoArgsConstructor
 @Getter
+@ToString
 public class Subscription {
 
     @NonNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, name = "subscribe_id")
+    @Column(nullable = false)
     private Long subscribeId;
 
     @NonNull
-    @Column(nullable = false, name = "user_name")
+    @Column(nullable = false)
     private String userName;
 
     @NonNull
-    @Column(nullable = false, name = "mentor_name")
+    @Column(nullable = false)
     private String mentorName;
 
     @Builder

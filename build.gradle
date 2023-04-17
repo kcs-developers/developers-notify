@@ -8,11 +8,23 @@ group = 'com.developers'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
+configurations {
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging' // 중복 sl4j2 오류 해결
+    }
+}
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    // 로깅 처리
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2' // loging을 위한 디펜던시; 기본 logback 삭제
+    implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.10.3' //dataformat 처리
+
+    // 이메일 발송
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     //mariadb
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
