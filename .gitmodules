@@ -1,0 +1,4 @@
+[submodule "developers-secret"]
+	path = developers-secret
+	url = https://github.com/kcs-developers/developers-secret.git
+	branch = main
