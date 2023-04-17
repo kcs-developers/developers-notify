@@ -1,7 +1,7 @@
-package com.developers.notify.developers.service;
+package com.developers.notify.service;
 
-import com.developers.notify.developers.dto.PublishScheduleMentorRequest;
-import com.developers.notify.developers.entity.SubscriptionSchedule;
+import com.developers.notify.dto.PublishScheduleMentorRequest;
+import com.developers.notify.entity.SubscriptionSchedule;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;

@@ -1,9 +1,8 @@
-package com.developers.notify.developers.controller;
+package com.developers.notify.controller;
 
-import com.developers.notify.developers.dto.PublishMentorRequest;
-import com.developers.notify.developers.entity.Subscription;
-import com.developers.notify.developers.service.MailSendService;
-import com.developers.notify.developers.service.SubscribeServiceImpl;
+import com.developers.notify.dto.PublishMentorRequest;
+import com.developers.notify.entity.Subscription;
+import com.developers.notify.service.SubscribeServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

@@ -1,8 +1,8 @@
-package com.developers.notify.developers.controller;
+package com.developers.notify.controller;
 
-import com.developers.notify.developers.dto.PublishScheduleMentorRequest;
-import com.developers.notify.developers.entity.SubscriptionSchedule;
-import com.developers.notify.developers.service.SubscribeScheduleServiceImpl;
+import com.developers.notify.dto.PublishScheduleMentorRequest;
+import com.developers.notify.entity.SubscriptionSchedule;
+import com.developers.notify.service.SubscribeScheduleServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

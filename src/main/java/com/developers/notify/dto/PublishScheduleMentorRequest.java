@@ -1,4 +1,4 @@
-package com.developers.notify.developers.dto;
+package com.developers.notify.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

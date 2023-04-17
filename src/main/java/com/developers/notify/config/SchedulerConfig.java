@@ -1,4 +1,4 @@
-package com.developers.notify.developers.config;
+package com.developers.notify.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
