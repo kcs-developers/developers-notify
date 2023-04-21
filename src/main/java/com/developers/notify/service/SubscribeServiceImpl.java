@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.yaml.snakeyaml.emitter.EmitterException;
 
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,41 +51,45 @@ public class SubscribeServiceImpl implements SubscribeService{
 
     @Override
     public List<Subscription> subscribeMentor(String mentorName, String userName, String email) throws Exception {
-        try {
             // 멘토+사용자 로 큐 생성
             String queStr = "push.queue." + mentorName + "." + userName;
 
-            // 문자열 큐 생성
-            Queue queue = new Queue(queStr, true, false, false);
-            rabbitAdmin.declareQueue(queue);
+            // 기존 큐 확인
+            Properties queueProperties = rabbitAdmin.getQueueProperties(queStr);
 
-            // 문자열 익스체인지 생성
-            String exchangeStr = "push.exchange";
-            Exchange exchange = ExchangeBuilder.topicExchange(exchangeStr).build();
-            rabbitAdmin.declareExchange(exchange);
+            // 기존 큐가 없으면 큐 생성 및 바인딩
+            if (queueProperties == null || queueProperties.isEmpty()) {
+                try {
+                    // 문자열 큐 생성
+                    Queue queue = new Queue(queStr, true, false, false);
+                    rabbitAdmin.declareQueue(queue);
 
-            // 문자열 키 생성
-            String routeStr = "push.route." + mentorName + "." + userName;
+                    // 문자열 익스체인지 생성
+                    String exchangeStr = "push.exchange";
+                    Exchange exchange = ExchangeBuilder.topicExchange(exchangeStr).build();
+                    rabbitAdmin.declareExchange(exchange);
 
-            // Queue, Exchange 바인딩
-            Binding binding = BindingBuilder.bind(queue).to(exchange).with(routeStr).noargs();
-            rabbitAdmin.declareBinding(binding);
+                    // 문자열 키 생성
+                    String routeStr = "push.route." + mentorName + "." + userName;
 
-            log.info(binding+" 이 생성되었습니다!");
-        }catch (Exception e){
-            log.error("메시지 큐 생성 오류! "+e);
-            throw new QueuesNotAvailableException("큐 바인딩 실패! ",e.getCause());
+                    // Queue, Exchange 바인딩
+                    Binding binding = BindingBuilder.bind(queue).to(exchange).with(routeStr).noargs();
+                    rabbitAdmin.declareBinding(binding);
+                    log.info(binding + " 이 생성되었습니다!");
+                } catch (Exception e) {
+                    log.error("메시지 큐 생성 오류! " + e);
+                    throw new QueuesNotAvailableException("큐 바인딩 실패! ", e.getCause());
+                }
+            }
+            try {
+                saveSubscription(userName, mentorName);
+                log.info(userName + "에" + mentorName + "이 저장되었습니다");
+            } catch (Exception e) {
+                log.error("DB 저장 오류");
+                throw new Exception("구독 목록 저장이 실패하였습니다");
+            }
+            return userSubscribeRepository.findAllByUserName(userName);
         }
-
-        try {
-            saveSubscription(userName, mentorName);
-            log.info(userName+"에" + mentorName + "이 저장되었습니다");
-        }catch (Exception e){
-            log.error("DB 저장 오류");
-            throw new Exception("구독 목록 저장이 실패하였습니다");
-        }
-        return userSubscribeRepository.findAllByUserName(userName);
-    }
 
     @Override
     public SseEmitter listenPush(String mentorName, String userName, String email){

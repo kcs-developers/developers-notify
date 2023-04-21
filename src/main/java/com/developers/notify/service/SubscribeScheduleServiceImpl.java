@@ -16,6 +16,7 @@ import org.yaml.snakeyaml.emitter.EmitterException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,27 +56,33 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
         // 멘토+사용자 로 큐 생성
         String queStr = "push.schedule.queue" + mentorName + "." + userName;
 
-        // 문자열 큐 생성
-        Queue queue = new Queue(queStr, true, false, false);
-        rabbitAdmin.declareQueue(queue);
+        // 기존 큐 확인
+        Properties queueProperties = rabbitAdmin.getQueueProperties(queStr);
 
-        // 문자열 익스체인지 생성
-        String exchangeStr = "push.schedule.exchange";
-        Exchange exchange = ExchangeBuilder.topicExchange(exchangeStr).build();
-        rabbitAdmin.declareExchange(exchange);
+        if (queueProperties == null || queueProperties.isEmpty()) {
+            try{
+                // 문자열 큐 생성
+                Queue queue = new Queue(queStr, true, false, false);
+                rabbitAdmin.declareQueue(queue);
 
-        // 문자열 키 생성
-        String routeStr = "push.schedule.route" + mentorName + "." + userName;
+                // 문자열 익스체인지 생성
+                String exchangeStr = "push.schedule.exchange";
+                Exchange exchange = ExchangeBuilder.topicExchange(exchangeStr).build();
+                rabbitAdmin.declareExchange(exchange);
 
-        // Queue, Exchange 바인딩
-        try {
-            Binding binding = BindingBuilder.bind(queue).to(exchange).with(routeStr).noargs();
-            rabbitAdmin.declareBinding(binding);
-            log.info(binding + " 이 생성되었습니다!");
-        }catch (Exception e){
-            log.error("메시지 큐 바인딩 실패");
-            throw new QueuesNotAvailableException("큐 바인딩 실패! ",e.getCause());
+                // 문자열 키 생성
+                String routeStr = "push.schedule.route" + mentorName + "." + userName;
+
+                // Queue, Exchange 바인딩
+                Binding binding = BindingBuilder.bind(queue).to(exchange).with(routeStr).noargs();
+                rabbitAdmin.declareBinding(binding);
+                log.info(binding + " 이 생성되었습니다!");
+            } catch (Exception e){
+                log.error("메시지 큐 바인딩 실패");
+                throw new QueuesNotAvailableException("큐 바인딩 실패! ",e.getCause());
+            }
         }
+
         // 구독 정보 DB에 저장
         try {
             saveSubscription(userName, mentorName);
