@@ -1,6 +1,6 @@
 package com.developers.notify.service;
 
-import com.developers.notify.dto.PublishScheduleMentorRequest;
+import com.developers.notify.dto.schedule.PublishScheduleMentorRequest;
 import com.developers.notify.entity.SubscriptionSchedule;
 import com.developers.notify.repository.UserSubscribeScheduleRepository;
 import lombok.AllArgsConstructor;
