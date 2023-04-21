@@ -47,11 +47,30 @@ public class MessageService {
             }
         });
 
+        try {
+            container.start();
+        } catch (Exception e) {
+            log.error("컨테이너 시작 중 에러 발생: ", e);
+        }
+
         emitter.onCompletion(() -> {
             log.info(userName + " 의 푸시 알림 객체 삭제! ");
             container.stop();
             userEmitters.remove(userName);
             log.info(userName + " 의 메시지 전달 객체 삭제");
+        });
+
+        emitter.onError((e) -> {
+            log.error("SSE 에러 발생: ", e);
+            container.stop();
+            userEmitters.remove(userName);
+        });
+
+        emitter.onTimeout(() -> {
+            log.info(userName + " 에서 타임아웃 발생");
+            emitter.complete();
+            container.stop();
+            userEmitters.remove(userName);
         });
     }
 
