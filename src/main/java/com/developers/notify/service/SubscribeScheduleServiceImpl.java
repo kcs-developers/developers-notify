@@ -117,7 +117,7 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
     }
 
     @Override
-    public List<ScheduleSubscription> unsubscribeMentor(String mentorName, String userName) throws Exception {
+    public List<ScheduleSubscription> unsubscribeMentor(String mentorName, String userName, String roomName) throws Exception {
         String queStr = "push.schedule.queue"+mentorName+userName;
         try {
             rabbitAdmin.deleteQueue(queStr);
@@ -127,7 +127,7 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
             throw new QueuesNotAvailableException("큐 삭제가 실패하였습니다", e.getCause());
         }
         try {
-            deleteSubscription(userName, mentorName);
+            deleteSubscription(userName, mentorName, roomName);
             log.info("DB 삭제 완료!");
         }catch (Exception e){
             log.error("DB 삭제 실패!");
@@ -161,8 +161,8 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
     }
 
     @Override
-    public void deleteSubscription(String userName, String mentorName){
-        ScheduleSubscription existingSubscription = userScheduleSubscribeRepository.findByUserNameAndMentorName(userName, mentorName);
+    public void deleteSubscription(String userName, String mentorName, String roomName){
+        ScheduleSubscription existingSubscription = userScheduleSubscribeRepository.findByUserNameAndMentorNameAndRoomName(userName, mentorName, roomName);
         if(existingSubscription != null){
             userScheduleSubscribeRepository.delete(existingSubscription);
             log.info("삭제 요청");

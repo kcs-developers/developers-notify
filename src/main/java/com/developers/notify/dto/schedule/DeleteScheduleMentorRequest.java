@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class DeleteScheduleMentorRequest {
     private String mentorName;
     private String userName;
+    private String roomName;
 }

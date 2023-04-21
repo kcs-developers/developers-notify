@@ -13,11 +13,11 @@ public interface SubscribeScheduleService {
     public void mentorPublishMessage(PublishScheduleMentorRequest request) throws Exception;
     public List<ScheduleSubscription> subscribeMentor(String mentorName, String userName, String email, String roomName, LocalDateTime startTime) throws Exception;
     public SseEmitter listenSchedulePush(String mentorName, String userName, String time, String email);
-    public List<ScheduleSubscription> unsubscribeMentor(String mentorName, String userName) throws Exception;
+    public List<ScheduleSubscription> unsubscribeMentor(String mentorName, String userName, String roomName) throws Exception;
     ///
     public List<ScheduleSubscription> getAllSubscriptions(String userName);
     public List<String> getUserList(String mentorName);
     public void saveSubscription(String userName, String mentorName, String roomName, LocalDateTime startTime);
 
-    public void deleteSubscription(String userName, String mentorName);
+    public void deleteSubscription(String userName, String mentorName, String roomName);
 }
