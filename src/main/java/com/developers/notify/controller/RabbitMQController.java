@@ -48,7 +48,7 @@ public class RabbitMQController {
                                                  @RequestParam String email) throws Exception{
         String mentorNameDecoded = URLDecoder.decode(mentorName, StandardCharsets.UTF_8);
         String userNameDecoded = URLDecoder.decode(userName, StandardCharsets.UTF_8);
-        log.info("listen params...",mentorNameDecoded, userNameDecoded);
+        log.info("listen params..."+"Mentor: "+mentorNameDecoded+"User: "+userNameDecoded);
 
         SseEmitter emitter = subscribeServiceImpl.listenPush(mentorName, userName, email);
         HttpHeaders headers = new HttpHeaders();

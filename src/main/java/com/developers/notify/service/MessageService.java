@@ -30,6 +30,7 @@ public class MessageService {
         userEmitters.put(userName, emitter);
 
         container.setMessageListener((MessageListener) message -> {
+            log.info("메시지 리스너: "+queueName);
             String payload = new String(message.getBody(), StandardCharsets.UTF_8);
             try {
                 sendMailIfEmailIsNotEmpty(email, payload);
@@ -57,6 +58,7 @@ public class MessageService {
     private SimpleMessageListenerContainer createMessageListenerContainer(String queueName) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
         container.setQueueNames(queueName);
+        log.info("컨테이너 생성: "+container);
         return container;
     }
 
