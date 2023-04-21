@@ -3,7 +3,7 @@ package com.developers.notify.controller;
 import com.developers.notify.dto.schedule.DeleteScheduleMentorRequest;
 import com.developers.notify.dto.schedule.PublishScheduleMentorRequest;
 import com.developers.notify.dto.schedule.SubscribeScheduleMentorRequest;
-import com.developers.notify.entity.SubscriptionSchedule;
+import com.developers.notify.entity.Subscription;
 import com.developers.notify.service.SubscribeScheduleServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -32,9 +32,9 @@ public class RabbitMQScheduleController {
     }
 
     @PostMapping("/subscribe/schedule")
-    public ResponseEntity subscribeMentor(@RequestBody SubscribeScheduleMentorRequest request) throws Exception{
-        subscribeScheduleService.subscribeMentor(request.getMentorName(), request.getUserName(), request.getEmail());
-        return ResponseEntity.status(HttpStatus.OK).body("구독 완료!");
+    public ResponseEntity<?> subscribeMentor(@RequestBody SubscribeScheduleMentorRequest request) throws Exception{
+        List<Subscription> newSubscriptions = subscribeScheduleService.subscribeMentor(request.getMentorName(), request.getUserName(), request.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body(newSubscriptions);
 
     }
 
@@ -54,9 +54,9 @@ public class RabbitMQScheduleController {
     }
 
     @DeleteMapping("/unsubscribe/schedule")
-    public ResponseEntity<String> unsubscribeMentor(@RequestBody DeleteScheduleMentorRequest request) throws Exception{
-        subscribeScheduleService.unsubscribeMentor(request.getMentorName(), request.getUserName());
-        return ResponseEntity.status(HttpStatus.OK).body("구독 취소 완료!");
+    public ResponseEntity<?> unsubscribeMentor(@RequestBody DeleteScheduleMentorRequest request) throws Exception{
+        List<Subscription> newSubscriptions = subscribeScheduleService.unsubscribeMentor(request.getMentorName(), request.getUserName());
+        return ResponseEntity.status(HttpStatus.OK).body(newSubscriptions);
     }
 
     @GetMapping("/subscriptions/schedule")
@@ -64,7 +64,7 @@ public class RabbitMQScheduleController {
         String userNameDecoded = URLDecoder.decode(userName, StandardCharsets.UTF_8);
         log.info("subscriptions params...",userNameDecoded);
 
-        List<SubscriptionSchedule> subscriptionSchedules = subscribeScheduleService.getAllSubscriptions(userName);
+        List<Subscription> subscriptionSchedules = subscribeScheduleService.getAllSubscriptions(userName);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(subscriptionSchedules);
     }

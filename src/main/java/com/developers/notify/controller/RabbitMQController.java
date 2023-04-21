@@ -37,9 +37,9 @@ public class RabbitMQController {
     // 멘토에 대한 구독
     //이 설정 이후부터 실시간 알림 발송 가능
     @PostMapping(value = "/subscribe")
-    public ResponseEntity subscribeMentor(@RequestBody SubscribeMentorRequest request) throws Exception{
-        subscribeServiceImpl.subscribeMentor(request.getMentorName(), request.getUserName(), request.getEmail());
-        return ResponseEntity.status(HttpStatus.OK).body("구독 완료!");
+    public ResponseEntity<?> subscribeMentor(@RequestBody SubscribeMentorRequest request) throws Exception{
+        List<Subscription> newSubscriptions = subscribeServiceImpl.subscribeMentor(request.getMentorName(), request.getUserName(), request.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body(newSubscriptions);
     }
 
     @GetMapping("/listen")
@@ -58,9 +58,9 @@ public class RabbitMQController {
 
     // 멘토 구독에 대한 삭제 이벤트
     @DeleteMapping("/unsubscribe")
-    public ResponseEntity<String> unsubscribeMentor(@RequestBody DeleteMentorRequest request) throws Exception{
-        subscribeServiceImpl.unsubscribeMentor(request.getMentorName(), request.getUserName());
-        return ResponseEntity.status(HttpStatus.OK).body("구독 취소 완료!");
+    public ResponseEntity<?> unsubscribeMentor(@RequestBody DeleteMentorRequest request) throws Exception{
+        List<Subscription> newSubscriptions = subscribeServiceImpl.unsubscribeMentor(request.getMentorName(), request.getUserName());
+        return ResponseEntity.status(HttpStatus.OK).body(newSubscriptions);
     }
 
     // 멘토 구독 정보 가져오기

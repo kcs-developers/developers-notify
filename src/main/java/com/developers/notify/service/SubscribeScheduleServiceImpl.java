@@ -1,8 +1,8 @@
 package com.developers.notify.service;
 
 import com.developers.notify.dto.schedule.PublishScheduleMentorRequest;
-import com.developers.notify.entity.SubscriptionSchedule;
-import com.developers.notify.repository.UserSubscribeScheduleRepository;
+import com.developers.notify.entity.Subscription;
+import com.developers.notify.repository.UserSubscribeRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.core.*;
@@ -26,7 +26,7 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
     private final RabbitAdmin rabbitAdmin; // rabbitmq 큐, exchange, router 연결 설정
     private final SchedulerService schedulerService; // 클라이언트로 메시지 전달
 
-    private final UserSubscribeScheduleRepository userSubscribeScheduleRepository; // 구독 정보(스케쥴링) 저장 DB 메소드
+    private final UserSubscribeRepository userSubscribeRepository; // 구독 정보 저장 DB 메소드
 
     @Override
     public void mentorPublishMessage(PublishScheduleMentorRequest request) throws Exception {
@@ -51,7 +51,7 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
     }
 
     @Override
-    public void subscribeMentor(String mentorName, String userName, String email) throws Exception {
+    public List<Subscription> subscribeMentor(String mentorName, String userName, String email) throws Exception {
         // 멘토+사용자 로 큐 생성
         String queStr = "push.schedule.queue" + mentorName + "." + userName;
 
@@ -84,6 +84,7 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
             log.error("DB 저장 오류");
             throw new Exception("구독 목록 저장이 실패하였습니다");
         }
+        return userSubscribeRepository.findAllByUserName(userName);
     }
 
     @Override
@@ -107,7 +108,7 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
     }
 
     @Override
-    public void unsubscribeMentor(String mentorName, String userName) throws Exception {
+    public List<Subscription> unsubscribeMentor(String mentorName, String userName) throws Exception {
         String queStr = "push.schedule.queue"+mentorName+userName;
         try {
             rabbitAdmin.deleteQueue(queStr);
@@ -123,27 +124,28 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
             log.error("DB 삭제 실패!");
             throw new Exception(mentorName+"큐에 대한 삭제가 실패하였습니다");
         }
+        return userSubscribeRepository.findAllByUserName(userName);
     }
 
     @Override
-    public List<SubscriptionSchedule> getAllSubscriptions(String userName) {
-        log.info(userSubscribeScheduleRepository.findAllByUserName(userName));
-        return userSubscribeScheduleRepository.findAllByUserName(userName);
+    public List<Subscription> getAllSubscriptions(String userName) {
+        log.info(userSubscribeRepository.findAllByUserName(userName));
+        return userSubscribeRepository.findAllByUserName(userName);
     }
 
     public List<String> getUserList(String mentorName){
-        List<SubscriptionSchedule> subscriptionSchedules = userSubscribeScheduleRepository.findAllByMentorName(mentorName);
+        List<Subscription> subscriptionSchedules = userSubscribeRepository.findAllByMentorName(mentorName);
         log.info(subscriptionSchedules);
-        return subscriptionSchedules.stream().map(SubscriptionSchedule::getUserName).collect(Collectors.toList());
+        return subscriptionSchedules.stream().map(Subscription::getUserName).collect(Collectors.toList());
     }
 
     @Override
     public void saveSubscription(String userName, String mentorName){
-        SubscriptionSchedule existingSubscription = userSubscribeScheduleRepository.findByUserNameAndMentorName(userName, mentorName);
+        Subscription existingSubscription = userSubscribeRepository.findByUserNameAndMentorName(userName, mentorName);
         if(existingSubscription == null){
-            SubscriptionSchedule subscriptionSchedule = new SubscriptionSchedule(userName, mentorName);
+            Subscription subscriptionSchedule = new Subscription(userName, mentorName);
             log.info(subscriptionSchedule);
-            userSubscribeScheduleRepository.save(subscriptionSchedule);
+            userSubscribeRepository.save(subscriptionSchedule);
         }else{
             log.error("중복 저장 오류");
         }
@@ -151,13 +153,12 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
 
     @Override
     public void deleteSubscription(String userName, String mentorName){
-        SubscriptionSchedule existingSubscription = userSubscribeScheduleRepository.findByUserNameAndMentorName(userName, mentorName);
+        Subscription existingSubscription = userSubscribeRepository.findByUserNameAndMentorName(userName, mentorName);
         if(existingSubscription != null){
-            userSubscribeScheduleRepository.delete(existingSubscription);
+            userSubscribeRepository.delete(existingSubscription);
             log.info("삭제 요청");
         }else{
             log.error("삭제 요청 실패");
         }
     }
-
 }

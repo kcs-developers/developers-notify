@@ -49,7 +49,7 @@ public class SubscribeServiceImpl implements SubscribeService{
     }
 
     @Override
-    public void subscribeMentor(String mentorName, String userName, String email) throws Exception {
+    public List<Subscription> subscribeMentor(String mentorName, String userName, String email) throws Exception {
         try {
             // 멘토+사용자 로 큐 생성
             String queStr = "push.queue." + mentorName + "." + userName;
@@ -83,6 +83,7 @@ public class SubscribeServiceImpl implements SubscribeService{
             log.error("DB 저장 오류");
             throw new Exception("구독 목록 저장이 실패하였습니다");
         }
+        return userSubscribeRepository.findAllByUserName(userName);
     }
 
     @Override
@@ -106,7 +107,7 @@ public class SubscribeServiceImpl implements SubscribeService{
     }
 
     @Override
-    public void unsubscribeMentor(String mentorName, String userName) throws Exception {
+    public List<Subscription> unsubscribeMentor(String mentorName, String userName) throws Exception {
         String queStr = "push.queue."+mentorName+"."+userName;
         try {
             rabbitAdmin.deleteQueue(queStr);
@@ -122,6 +123,7 @@ public class SubscribeServiceImpl implements SubscribeService{
             log.error("DB 삭제 실패");
             throw new Exception(mentorName+"큐에 대한 삭제가 실패하였습니다");
         }
+        return userSubscribeRepository.findAllByUserName(userName);
     }
     @Override
     public List<Subscription> getAllSubscriptions(String userName) {
