@@ -1,6 +1,5 @@
 package com.developers.notify.repository;
 
-import com.developers.notify.entity.SubscriptionSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
