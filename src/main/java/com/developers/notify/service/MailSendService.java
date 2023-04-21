@@ -31,10 +31,10 @@ public class MailSendService {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom("developers.notify.only@gmail.com");
         mailMessage.setTo(email);
-        if(sendText[0] == "push"){
+        if(sendText[0].equals("push")){
             mailMessage.setSubject("[Developers] 구독하신 멘토의 새 소식 발송!");
             mailMessage.setText(sendText[1]);
-        }else if(sendText[0] == "schedule"){
+        }else if(sendText[0].equals("schedule")){
             mailMessage.setSubject("[Developers] 멘토링이 곧 시작합니다!");
             mailMessage.setText(sendText[1]);
         }
