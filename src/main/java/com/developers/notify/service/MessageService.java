@@ -34,8 +34,14 @@ public class MessageService {
             try {
                 sendMailIfEmailIsNotEmpty(email, payload);
                 log.info("전송될 메시지: " + payload);
+            } catch (ParseException e) {
+                handleIOException(container, e);
+            }
+            try{
                 emitter.send(SseEmitter.event().name("push").data(payload));
-            } catch (IOException | ParseException e) {
+                log.info("푸시될 메시지: "+payload);
+            }catch (IOException e){
+                log.error(e);
                 handleIOException(container, e);
             }
         });
