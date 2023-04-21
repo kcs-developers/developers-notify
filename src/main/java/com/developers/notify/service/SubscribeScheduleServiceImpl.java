@@ -42,7 +42,7 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
         try {
             for (String userName : userNames) {
                 String routeStr = "push.schedule.route" + request.getMentorName() + "." + userName;
-                String message = "**멘토링 시작 10분 전입니다**";
+                String message = "schedule::구독한 "+request.getMentorName()+" 멘토가 방을 만들었습니다!\n"+request.getRoomUrl()+" 로 입장 가능합니다!";
                 rabbitTemplate.convertAndSend(exchangeStr, routeStr, message);
             }
         }catch (Exception e){
