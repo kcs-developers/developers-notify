@@ -35,7 +35,7 @@ public class MailSendService {
             mailMessage.setSubject("[Developers] 구독하신 멘토의 새 소식 발송!");
             mailMessage.setText(sendText[1]);
         }else if(sendText[0].equals("schedule")){
-            mailMessage.setSubject("[Developers] 멘토링이 곧 시작합니다!");
+            mailMessage.setSubject("[Developers] 멘토링에 입장이 가능합니다!");
             mailMessage.setText(sendText[1]);
         }
         mailMessage.setSentDate(date);
