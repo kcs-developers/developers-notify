@@ -3,7 +3,7 @@ package com.developers.notify.controller;
 import com.developers.notify.dto.schedule.DeleteScheduleMentorRequest;
 import com.developers.notify.dto.schedule.PublishScheduleMentorRequest;
 import com.developers.notify.dto.schedule.SubscribeScheduleMentorRequest;
-import com.developers.notify.entity.Subscription;
+import com.developers.notify.entity.ScheduleSubscription;
 import com.developers.notify.service.SubscribeScheduleServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -33,7 +33,7 @@ public class RabbitMQScheduleController {
 
     @PostMapping("/subscribe/schedule")
     public ResponseEntity<?> subscribeMentor(@RequestBody SubscribeScheduleMentorRequest request) throws Exception{
-        List<Subscription> newSubscriptions = subscribeScheduleService.subscribeMentor(request.getMentorName(), request.getUserName(), request.getEmail());
+        List<ScheduleSubscription> newSubscriptions = subscribeScheduleService.subscribeMentor(request.getMentorName(), request.getUserName(), request.getEmail(), request.getRoomName(), request.getStartTime());
         return ResponseEntity.status(HttpStatus.OK).body(newSubscriptions);
 
     }
@@ -55,7 +55,7 @@ public class RabbitMQScheduleController {
 
     @DeleteMapping("/unsubscribe/schedule")
     public ResponseEntity<?> unsubscribeMentor(@RequestBody DeleteScheduleMentorRequest request) throws Exception{
-        List<Subscription> newSubscriptions = subscribeScheduleService.unsubscribeMentor(request.getMentorName(), request.getUserName());
+        List<ScheduleSubscription> newSubscriptions = subscribeScheduleService.unsubscribeMentor(request.getMentorName(), request.getUserName());
         return ResponseEntity.status(HttpStatus.OK).body(newSubscriptions);
     }
 
@@ -64,7 +64,7 @@ public class RabbitMQScheduleController {
         String userNameDecoded = URLDecoder.decode(userName, StandardCharsets.UTF_8);
         log.info("subscriptions params...",userNameDecoded);
 
-        List<Subscription> subscriptionSchedules = subscribeScheduleService.getAllSubscriptions(userName);
+        List<ScheduleSubscription> subscriptionSchedules = subscribeScheduleService.getAllSubscriptions(userName);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(subscriptionSchedules);
     }
