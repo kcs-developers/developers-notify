@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 @Log4j2
 public class SchedulerService {
     private final ScheduledExecutorService scheduledExecutorService;
-    private final MessageService messageService;
+    private final MessageScheduleService messageScheduleService;
 
 
     public void scheduleNotify(LocalDateTime notificationTime, String queName, String userName, SseEmitter emitter, String email){
@@ -23,7 +23,7 @@ public class SchedulerService {
         log.info("---메시지 발송 예약---"+delay);
         scheduledExecutorService.schedule(() -> {
             try {
-                messageService.subscribeToMessages(queName, userName, emitter, email);
+                messageScheduleService.subscribeToMessages(queName, userName, emitter, email);
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage());
             }
