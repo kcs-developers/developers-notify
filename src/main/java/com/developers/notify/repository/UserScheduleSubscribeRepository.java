@@ -11,4 +11,6 @@ public interface UserScheduleSubscribeRepository extends JpaRepository<ScheduleS
 
     List<ScheduleSubscription> findAllByMentorName(String mentorName);
     ScheduleSubscription findByUserNameAndMentorName(String userName, String mentorName);
+    ScheduleSubscription findByUserNameAndMentorNameAndRoomName(String userName, String mentorName, String roomName);
+
 }

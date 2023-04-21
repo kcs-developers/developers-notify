@@ -55,7 +55,7 @@ public class RabbitMQScheduleController {
 
     @DeleteMapping("/unsubscribe/schedule")
     public ResponseEntity<?> unsubscribeMentor(@RequestBody DeleteScheduleMentorRequest request) throws Exception{
-        List<ScheduleSubscription> newSubscriptions = subscribeScheduleService.unsubscribeMentor(request.getMentorName(), request.getUserName());
+        List<ScheduleSubscription> newSubscriptions = subscribeScheduleService.unsubscribeMentor(request.getMentorName(), request.getUserName(), request.getRoomName());
         return ResponseEntity.status(HttpStatus.OK).body(newSubscriptions);
     }
 
