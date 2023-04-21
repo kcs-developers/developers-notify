@@ -1,6 +1,6 @@
 package com.developers.notify.service;
 
-import com.developers.notify.dto.PublishMentorRequest;
+import com.developers.notify.dto.push.PublishMentorRequest;
 import com.developers.notify.entity.Subscription;
 import com.developers.notify.repository.UserSubscribeRepository;
 import lombok.AllArgsConstructor;
