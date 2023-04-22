@@ -42,7 +42,7 @@ public class RabbitMQScheduleController {
 
     }
 
-    @GetMapping("/listen")
+    @GetMapping("/listen/schedule")
     public ResponseEntity<SseEmitter> listenSchedulePush(@RequestParam String mentorName,
                                                          @RequestParam String userName,
                                                          @RequestParam String time,
