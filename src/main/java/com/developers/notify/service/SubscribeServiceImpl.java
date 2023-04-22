@@ -27,18 +27,19 @@ public class SubscribeServiceImpl implements SubscribeService{
     private final UserSubscribeRepository userSubscribeRepository; // 구독 정보 저장 DB 메소드
 
     @Override
-    public void mentorPublishMessage(String mentorName, String message) throws Exception {
+    public void mentorPublishMessage(PublishMentorRequest request) throws Exception {
         // 문자열 익스체인지 생성
         String exchangeStr = "push.exchange";
         Exchange exchange = ExchangeBuilder.topicExchange(exchangeStr).build();
         rabbitAdmin.declareExchange(exchange);
 
-        List<String> userNames = getUserList(mentorName);
-        log.info(mentorName+"의 구독 목록: "+userNames);
+        List<String> userNames = getUserList(request.getMentorName());
+        log.info(request.getMentorName()+"의 구독 목록: "+userNames);
         // 라우팅 키 생성
         try {
             for (String userName : userNames) {
-                String routeStr = "push.route." + mentorName + "." + userName;
+                String routeStr = "push.route." + request.getMentorName() + "." + userName;
+                String message = "push-구독한 "+request.getMentorName()+"가 "+request.getRoomName()+"의 멘토링을 개설하였습니다!";
                 // 메시지 전송
                 log.info("큐로 메시지 전송 성공!");
                 rabbitTemplate.convertAndSend(exchangeStr, routeStr, message);

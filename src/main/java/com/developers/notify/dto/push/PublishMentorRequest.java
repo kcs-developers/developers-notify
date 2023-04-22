@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class PublishMentorRequest {
-    private String message;
     private String mentorName;
+    private String roomName;
 }

@@ -29,10 +29,7 @@ public class RabbitMQController {
     // 멘토의 메시지 발행
     @PostMapping("/publish")
     public ResponseEntity<String> publishMentor(@RequestBody PublishMentorRequest request) throws Exception {
-        String mentorNameDecoded = URLDecoder.decode(request.getMentorName(), StandardCharsets.UTF_8);
-        String messageDecoded = URLDecoder.decode(request.getMessage(), StandardCharsets.UTF_8);
-
-        subscribeServiceImpl.mentorPublishMessage(mentorNameDecoded, messageDecoded);
+        subscribeServiceImpl.mentorPublishMessage(request);
         return ResponseEntity.ok("발행 완료!");
     }
 
