@@ -50,7 +50,7 @@ public class RabbitMQController {
         String userNameDecoded = URLDecoder.decode(userName, StandardCharsets.UTF_8);
         log.info("listen params..."+"Mentor: "+mentorNameDecoded+"User: "+userNameDecoded);
 
-        SseEmitter emitter = subscribeServiceImpl.listenPush(mentorName, userName, email);
+        SseEmitter emitter = subscribeServiceImpl.listenPush(mentorNameDecoded, userNameDecoded, email);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.TEXT_EVENT_STREAM);
         return new ResponseEntity<>(emitter, headers, HttpStatus.OK);

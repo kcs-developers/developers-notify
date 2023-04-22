@@ -47,7 +47,7 @@ public class RabbitMQScheduleController {
         String userNameDecoded = URLDecoder.decode(userName, StandardCharsets.UTF_8);
         log.info("listen params...",mentorNameDecoded, userNameDecoded);
 
-        SseEmitter emitter = subscribeScheduleService.listenSchedulePush(mentorName, userName, time, email);
+        SseEmitter emitter = subscribeScheduleService.listenSchedulePush(mentorNameDecoded, userNameDecoded, time, email);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.TEXT_EVENT_STREAM);
         return new ResponseEntity<>(emitter, headers, HttpStatus.OK);
