@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class PublishScheduleMentorRequest {
     private String mentorName;
     private String roomUrl;
+    private String roomName;
 }

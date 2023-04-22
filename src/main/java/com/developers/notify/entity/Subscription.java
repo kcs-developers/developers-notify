@@ -23,9 +23,14 @@ public class Subscription {
     @Column(nullable = false)
     private String mentorName;
 
+    private String roomName;
+    private String startTime;
+
     @Builder
-    public Subscription(String userName, String mentorName){
+    public Subscription(String userName, String mentorName, String roomName, String startTime){
         this.userName = userName;
         this.mentorName = mentorName;
+        this.roomName = roomName;
+        this.startTime = startTime;
     }
 }

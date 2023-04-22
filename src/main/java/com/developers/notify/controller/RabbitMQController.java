@@ -29,7 +29,9 @@ public class RabbitMQController {
     // 멘토의 메시지 발행
     @PostMapping("/publish")
     public ResponseEntity<String> publishMentor(@RequestBody PublishMentorRequest request) throws Exception {
-        subscribeServiceImpl.mentorPublishMessage(request);
+        String mentorNameDecoded = URLDecoder.decode(request.getMentorName(), StandardCharsets.UTF_8);
+        String messageDecoded = URLDecoder.decode(request.getMessage(), StandardCharsets.UTF_8);
+        subscribeServiceImpl.mentorPublishMessage(mentorNameDecoded, messageDecoded);
         return ResponseEntity.ok("발행 완료!");
     }
 
@@ -38,7 +40,10 @@ public class RabbitMQController {
     //이 설정 이후부터 실시간 알림 발송 가능
     @PostMapping(value = "/subscribe")
     public ResponseEntity<?> subscribeMentor(@RequestBody SubscribeMentorRequest request) throws Exception{
-        List<Subscription> newSubscriptions = subscribeServiceImpl.subscribeMentor(request.getMentorName(), request.getUserName(), request.getEmail());
+        String mentorNameDecoded = URLDecoder.decode(request.getMentorName(), StandardCharsets.UTF_8);
+        String userNameDecoded = URLDecoder.decode(request.getUserName(), StandardCharsets.UTF_8);
+        String roomNameDecoded = URLDecoder.decode(request.getRoomName(), StandardCharsets.UTF_8);
+        List<Subscription> newSubscriptions = subscribeServiceImpl.subscribeMentor(mentorNameDecoded, userNameDecoded, request.getEmail(), roomNameDecoded, request.getStartTime());
         return ResponseEntity.status(HttpStatus.OK).body(newSubscriptions);
     }
 
@@ -59,7 +64,10 @@ public class RabbitMQController {
     // 멘토 구독에 대한 삭제 이벤트
     @DeleteMapping("/unsubscribe")
     public ResponseEntity<?> unsubscribeMentor(@RequestBody DeleteMentorRequest request) throws Exception{
-        List<Subscription> newSubscriptions = subscribeServiceImpl.unsubscribeMentor(request.getMentorName(), request.getUserName());
+        String mentorNameDecoded = URLDecoder.decode(request.getMentorName(), StandardCharsets.UTF_8);
+        String userNameDecoded = URLDecoder.decode(request.getUserName(), StandardCharsets.UTF_8);
+        String roomNameDecoded = URLDecoder.decode(request.getRoomName(), StandardCharsets.UTF_8);
+        List<Subscription> newSubscriptions = subscribeServiceImpl.unsubscribeMentor(mentorNameDecoded, userNameDecoded, roomNameDecoded);
         return ResponseEntity.status(HttpStatus.OK).body(newSubscriptions);
     }
 

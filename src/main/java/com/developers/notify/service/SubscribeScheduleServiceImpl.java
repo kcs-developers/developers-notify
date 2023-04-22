@@ -43,7 +43,7 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
         // 사용자 큐에 메시지 발송
         try {
             for (String userName : userNames) {
-                String routeStr = "push.schedule.route" + request.getMentorName() + "." + userName;
+                String routeStr = "push.schedule.route." + request.getMentorName() + "." + userName+"."+request.getRoomName();
                 String message = "schedule::구독한 "+request.getMentorName()+" 멘토가 방을 만들었습니다!\n"+request.getRoomUrl()+" 로 입장 가능합니다!";
                 rabbitTemplate.convertAndSend(exchangeStr, routeStr, message);
             }
@@ -56,7 +56,7 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
     @Override
     public List<ScheduleSubscription> subscribeMentor(String mentorName, String userName, String email, String roomName, LocalDateTime startTime) throws Exception {
         // 멘토+사용자 로 큐 생성
-        String queStr = "push.schedule.queue" + mentorName + "." + userName;
+        String queStr = "push.schedule.queue." + mentorName + "." + userName+"."+roomName;
 
         // 기존 큐 확인
         Properties queueProperties = rabbitAdmin.getQueueProperties(queStr);
@@ -73,7 +73,7 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
                 rabbitAdmin.declareExchange(exchange);
 
                 // 문자열 키 생성
-                String routeStr = "push.schedule.route" + mentorName + "." + userName;
+                String routeStr = "push.schedule.route." + mentorName + "." + userName+"."+roomName;
 
                 // Queue, Exchange 바인딩
                 Binding binding = BindingBuilder.bind(queue).to(exchange).with(routeStr).noargs();
@@ -97,9 +97,9 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
     }
 
     @Override
-    public SseEmitter listenSchedulePush(String mentorName, String userName, String time,String email){
+    public SseEmitter listenSchedulePush(String mentorName, String userName, String time,String email, String roomName){
         // 멘토+사용자 로 큐 생성
-        String queStr = "push.schedule.queue" + mentorName + "." + userName;
+        String queStr = "push.schedule.queue." + mentorName + "." + userName+"."+roomName;
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
         LocalDateTime notificationTime = LocalDateTime.parse(time, formatter);
@@ -118,7 +118,7 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
 
     @Override
     public List<ScheduleSubscription> unsubscribeMentor(String mentorName, String userName, String roomName) throws Exception {
-        String queStr = "push.schedule.queue"+mentorName+userName;
+        String queStr = "push.schedule.queue."+mentorName+"."+userName+"."+roomName;
         try {
             rabbitAdmin.deleteQueue(queStr);
             log.info("큐 삭제 완료");
