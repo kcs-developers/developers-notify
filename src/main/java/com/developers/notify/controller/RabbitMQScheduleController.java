@@ -42,12 +42,14 @@ public class RabbitMQScheduleController {
     public ResponseEntity<SseEmitter> listenSchedulePush(@RequestParam String mentorName,
                                                          @RequestParam String userName,
                                                          @RequestParam String time,
-                                                         @RequestParam String email) throws Exception{
+                                                         @RequestParam String email,
+                                                         @RequestParam String roomName) throws Exception{
         String mentorNameDecoded = URLDecoder.decode(mentorName, StandardCharsets.UTF_8);
         String userNameDecoded = URLDecoder.decode(userName, StandardCharsets.UTF_8);
+        String roomNameDecoded = URLDecoder.decode(roomName, StandardCharsets.UTF_8);
         log.info("listen params...",mentorNameDecoded, userNameDecoded);
 
-        SseEmitter emitter = subscribeScheduleService.listenSchedulePush(mentorNameDecoded, userNameDecoded, time, email);
+        SseEmitter emitter = subscribeScheduleService.listenSchedulePush(mentorNameDecoded, userNameDecoded, time, email, roomNameDecoded);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.TEXT_EVENT_STREAM);
         return new ResponseEntity<>(emitter, headers, HttpStatus.OK);

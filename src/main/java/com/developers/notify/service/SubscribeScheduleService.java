@@ -12,7 +12,7 @@ public interface SubscribeScheduleService {
 
     public void mentorPublishMessage(PublishScheduleMentorRequest request) throws Exception;
     public List<ScheduleSubscription> subscribeMentor(String mentorName, String userName, String email, String roomName, LocalDateTime startTime) throws Exception;
-    public SseEmitter listenSchedulePush(String mentorName, String userName, String time, String email);
+    public SseEmitter listenSchedulePush(String mentorName, String userName, String time, String email, String roomName);
     public List<ScheduleSubscription> unsubscribeMentor(String mentorName, String userName, String roomName) throws Exception;
     ///
     public List<ScheduleSubscription> getAllSubscriptions(String userName);
