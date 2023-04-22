@@ -8,7 +8,7 @@ import java.util.List;
 ;
 
 public interface SubscribeService {
-    public void mentorPublishMessage(String mentorName, String message) throws Exception;
+    public void mentorPublishMessage(PublishMentorRequest request) throws Exception;
     public List<Subscription> subscribeMentor(String mentorName, String userName, String email, String roomName, String startTime) throws Exception;
     public SseEmitter listenPush(String mentorName, String userName, String email);
     public List<Subscription> unsubscribeMentor(String mentorName, String userName, String roomName) throws Exception;

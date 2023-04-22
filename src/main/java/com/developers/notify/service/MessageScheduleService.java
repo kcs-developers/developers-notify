@@ -39,7 +39,7 @@ public class MessageScheduleService {
                 handleIOException(scheduleContainer, e);
             }
             try{
-                emitter.send(SseEmitter.event().name("schedule").data(payload));
+                emitter.send(SseEmitter.event().name("schedule").data(payload.substring(9)));
                 log.info("푸시될 스케쥴 메시지: "+payload);
             }catch (IOException e){
                 log.error(e);

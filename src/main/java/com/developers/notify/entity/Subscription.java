@@ -23,7 +23,11 @@ public class Subscription {
     @Column(nullable = false)
     private String mentorName;
 
+    @NonNull
+    @Column(nullable = false)
     private String roomName;
+
+    @Column(nullable = true)
     private String startTime;
 
     @Builder
