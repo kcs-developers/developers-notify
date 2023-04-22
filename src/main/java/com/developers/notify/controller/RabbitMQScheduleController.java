@@ -33,7 +33,11 @@ public class RabbitMQScheduleController {
 
     @PostMapping("/subscribe/schedule")
     public ResponseEntity<?> subscribeMentor(@RequestBody SubscribeScheduleMentorRequest request) throws Exception{
-        List<ScheduleSubscription> newSubscriptions = subscribeScheduleService.subscribeMentor(request.getMentorName(), request.getUserName(), request.getEmail(), request.getRoomName(), request.getStartTime());
+        String mentorNameDecoded = URLDecoder.decode(request.getMentorName(), StandardCharsets.UTF_8);
+        String userNameDecoded = URLDecoder.decode(request.getUserName(), StandardCharsets.UTF_8);
+        String roomNameDecoded = URLDecoder.decode(request.getRoomName(), StandardCharsets.UTF_8);
+
+        List<ScheduleSubscription> newSubscriptions = subscribeScheduleService.subscribeMentor(mentorNameDecoded, userNameDecoded, request.getEmail(), roomNameDecoded, request.getStartTime());
         return ResponseEntity.status(HttpStatus.OK).body(newSubscriptions);
 
     }
@@ -57,7 +61,11 @@ public class RabbitMQScheduleController {
 
     @DeleteMapping("/unsubscribe/schedule")
     public ResponseEntity<?> unsubscribeMentor(@RequestBody DeleteScheduleMentorRequest request) throws Exception{
-        List<ScheduleSubscription> newSubscriptions = subscribeScheduleService.unsubscribeMentor(request.getMentorName(), request.getUserName(), request.getRoomName());
+        String mentorNameDecoded = URLDecoder.decode(request.getMentorName(), StandardCharsets.UTF_8);
+        String userNameDecoded = URLDecoder.decode(request.getUserName(), StandardCharsets.UTF_8);
+        String roomNameDecoded = URLDecoder.decode(request.getRoomName(), StandardCharsets.UTF_8);
+
+        List<ScheduleSubscription> newSubscriptions = subscribeScheduleService.unsubscribeMentor(mentorNameDecoded, userNameDecoded, roomNameDecoded);
         return ResponseEntity.status(HttpStatus.OK).body(newSubscriptions);
     }
 
