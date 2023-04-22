@@ -39,7 +39,7 @@ public class MessageService {
                 handleIOException(container, e);
             }
             try{
-                emitter.send(SseEmitter.event().name("push").data(payload));
+                emitter.send(SseEmitter.event().name("push").data(payload.substring(5)));
                 log.info("푸시될 메시지: "+payload);
             }catch (IOException e){
                 log.error(e);
