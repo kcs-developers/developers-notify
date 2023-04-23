@@ -39,7 +39,7 @@ public class SubscribeServiceImpl implements SubscribeService{
         try {
             for (String userName : userNames) {
                 String routeStr = "push.route." + request.getMentorName() + "." + userName;
-                String message = "push-구독한 "+request.getMentorName()+"가 "+request.getRoomName()+"의 멘토링을 개설하였습니다!";
+                String message = "push-구독한 "+request.getMentorName()+" 멘토가 방을 만들었습니다!\nhttps://diveloper.site/mentoring 에서 확인하세요!";
                 // 메시지 전송
                 log.info("큐로 메시지 전송 성공!");
                 rabbitTemplate.convertAndSend(exchangeStr, routeStr, message);
