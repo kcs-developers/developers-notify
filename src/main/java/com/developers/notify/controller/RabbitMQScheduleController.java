@@ -25,11 +25,12 @@ import java.util.List;
 public class RabbitMQScheduleController {
     private final SubscribeScheduleServiceImpl subscribeScheduleService;
 
-    @PostMapping("/publish/schedule")
-    public ResponseEntity<String> publishMentor(@RequestBody PublishScheduleMentorRequest request) throws Exception{
-        subscribeScheduleService.mentorPublishMessage(request);
-        return ResponseEntity.status(HttpStatus.OK).body("메시지 전달 완료!");
-    }
+    // 사실 스케쥴링을 위해 멘토가 큐에 메시지를 발행하는건 서버에서만 이루어져야하는 작업임
+//    @PostMapping("/publish/schedule")
+//    public ResponseEntity<String> publishMentor(@RequestBody PublishScheduleMentorRequest request) throws Exception{
+//        subscribeScheduleService.mentorPublishMessage(request);
+//        return ResponseEntity.status(HttpStatus.OK).body("메시지 전달 완료!");
+//    }
 
     @PostMapping("/subscribe/schedule")
     public ResponseEntity<?> subscribeMentor(@RequestBody SubscribeScheduleMentorRequest request) throws Exception{
