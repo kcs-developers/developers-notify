@@ -51,7 +51,7 @@ public class SubscribeServiceImpl implements SubscribeService{
     }
 
     @Override
-    public List<Subscription> subscribeMentor(String mentorName, String userName, String email, String roomName, String startTime) throws Exception {
+    public List<Subscription> subscribeMentor(String mentorName, String userName, String email, String roomName) throws Exception {
             // 멘토+사용자 로 큐 생성
             String queStr = "push.queue." + mentorName + "." + userName;
 
@@ -83,9 +83,8 @@ public class SubscribeServiceImpl implements SubscribeService{
                 }
             }
             try {
-                saveSubscription(userName, mentorName, roomName, startTime);
+                saveSubscription(userName, mentorName, roomName);
                 log.info(userName + "에" + mentorName + "이 저장되었습니다");
-                log.info(roomName+"의 시작 시간은 "+startTime);
             } catch (Exception e) {
                 log.error("DB 저장 오류");
                 throw new Exception("구독 목록 저장이 실패하였습니다");
@@ -146,11 +145,11 @@ public class SubscribeServiceImpl implements SubscribeService{
     }
 
     @Override
-    public void saveSubscription(String userName, String mentorName, String roomName, String startTime) {
+    public void saveSubscription(String userName, String mentorName, String roomName) {
         // 중복 저장 방지
         Subscription existingSubscription = userSubscribeRepository.findByUserNameAndMentorName(userName, mentorName);
         if (existingSubscription == null) {
-            Subscription subscription = new Subscription(userName, mentorName, roomName, startTime);
+            Subscription subscription = new Subscription(userName, mentorName, roomName);
             userSubscribeRepository.save(subscription);
         }else{
             log.error("중복 저장 오류");

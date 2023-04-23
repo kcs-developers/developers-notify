@@ -42,7 +42,7 @@ public class RabbitMQController {
         String userNameDecoded = URLDecoder.decode(request.getUserName(), StandardCharsets.UTF_8);
         String roomNameDecoded = URLDecoder.decode(request.getRoomName(), StandardCharsets.UTF_8);
 
-        List<Subscription> newSubscriptions = subscribeServiceImpl.subscribeMentor(mentorNameDecoded, userNameDecoded, request.getEmail(), roomNameDecoded, request.getStartTime());
+        List<Subscription> newSubscriptions = subscribeServiceImpl.subscribeMentor(mentorNameDecoded, userNameDecoded, request.getEmail(), roomNameDecoded);
         return ResponseEntity.status(HttpStatus.OK).body(newSubscriptions);
     }
 
