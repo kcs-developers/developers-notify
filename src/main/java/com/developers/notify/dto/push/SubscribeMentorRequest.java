@@ -12,5 +12,4 @@ public class SubscribeMentorRequest {
     private String userName;
     private String email;
     private String roomName;
-    private String startTime;
 }

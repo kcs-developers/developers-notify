@@ -27,14 +27,10 @@ public class Subscription {
     @Column(nullable = false)
     private String roomName;
 
-    @Column(nullable = true)
-    private String startTime;
-
     @Builder
-    public Subscription(String userName, String mentorName, String roomName, String startTime){
+    public Subscription(String userName, String mentorName, String roomName){
         this.userName = userName;
         this.mentorName = mentorName;
         this.roomName = roomName;
-        this.startTime = startTime;
     }
 }
