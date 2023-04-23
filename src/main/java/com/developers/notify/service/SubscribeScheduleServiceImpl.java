@@ -2,9 +2,7 @@ package com.developers.notify.service;
 
 import com.developers.notify.dto.schedule.PublishScheduleMentorRequest;
 import com.developers.notify.entity.ScheduleSubscription;
-import com.developers.notify.entity.Subscription;
 import com.developers.notify.repository.UserScheduleSubscribeRepository;
-import com.developers.notify.repository.UserSubscribeRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.core.*;
@@ -150,13 +148,13 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
 
     @Override
     public void saveSubscription(String userName, String mentorName, String roomName, LocalDateTime startTime){
-        ScheduleSubscription existingSubscription = userScheduleSubscribeRepository.findByUserNameAndMentorName(userName, mentorName);
+        ScheduleSubscription existingSubscription = userScheduleSubscribeRepository.findByUserNameAndMentorNameAndRoomNameAndStartTime(userName, mentorName, roomName, startTime);
         if(existingSubscription == null){
             ScheduleSubscription subscriptionSchedule = new ScheduleSubscription(userName, mentorName, roomName, startTime);
             log.info(subscriptionSchedule);
             userScheduleSubscribeRepository.save(subscriptionSchedule);
         }else{
-            log.error("중복 저장 오류");
+            log.error("이미 구독한 사용자입니다!");
         }
     }
 

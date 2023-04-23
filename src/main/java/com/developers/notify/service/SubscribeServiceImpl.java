@@ -147,12 +147,12 @@ public class SubscribeServiceImpl implements SubscribeService{
     @Override
     public void saveSubscription(String userName, String mentorName, String roomName) {
         // 중복 저장 방지
-        Subscription existingSubscription = userSubscribeRepository.findByUserNameAndMentorName(userName, mentorName);
+        Subscription existingSubscription = userSubscribeRepository.findByUserNameAndMentorNameAndRoomName(userName, mentorName, roomName);
         if (existingSubscription == null) {
             Subscription subscription = new Subscription(userName, mentorName, roomName);
             userSubscribeRepository.save(subscription);
         }else{
-            log.error("중복 저장 오류");
+            log.error("이미 구독한 사용자입니다!");
         }
     }
 
