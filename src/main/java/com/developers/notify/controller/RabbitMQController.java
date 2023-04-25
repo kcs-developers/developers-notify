@@ -40,9 +40,8 @@ public class RabbitMQController {
     public ResponseEntity<?> subscribeMentor(@RequestBody SubscribeMentorRequest request) throws Exception{
         String mentorNameDecoded = URLDecoder.decode(request.getMentorName(), StandardCharsets.UTF_8);
         String userNameDecoded = URLDecoder.decode(request.getUserName(), StandardCharsets.UTF_8);
-        String roomNameDecoded = URLDecoder.decode(request.getRoomName(), StandardCharsets.UTF_8);
 
-        List<Subscription> newSubscriptions = subscribeServiceImpl.subscribeMentor(mentorNameDecoded, userNameDecoded, request.getEmail(), roomNameDecoded);
+        List<Subscription> newSubscriptions = subscribeServiceImpl.subscribeMentor(mentorNameDecoded, userNameDecoded, request.getEmail());
         return ResponseEntity.status(HttpStatus.OK).body(newSubscriptions);
     }
 
@@ -65,9 +64,8 @@ public class RabbitMQController {
     public ResponseEntity<?> unsubscribeMentor(@RequestBody DeleteMentorRequest request) throws Exception{
         String mentorNameDecoded = URLDecoder.decode(request.getMentorName(), StandardCharsets.UTF_8);
         String userNameDecoded = URLDecoder.decode(request.getUserName(), StandardCharsets.UTF_8);
-        String roomNameDecoded = URLDecoder.decode(request.getRoomName(), StandardCharsets.UTF_8);
 
-        List<Subscription> newSubscriptions = subscribeServiceImpl.unsubscribeMentor(mentorNameDecoded, userNameDecoded, roomNameDecoded);
+        List<Subscription> newSubscriptions = subscribeServiceImpl.unsubscribeMentor(mentorNameDecoded, userNameDecoded);
         return ResponseEntity.status(HttpStatus.OK).body(newSubscriptions);
     }
 
