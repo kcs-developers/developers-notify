@@ -51,7 +51,7 @@ public class SubscribeServiceImpl implements SubscribeService{
     }
 
     @Override
-    public List<Subscription> subscribeMentor(String mentorName, String userName, String email, String roomName) throws Exception {
+    public List<Subscription> subscribeMentor(String mentorName, String userName, String email) throws Exception {
             // 멘토+사용자 로 큐 생성
             String queStr = "push.queue." + mentorName + "." + userName;
 
@@ -83,7 +83,7 @@ public class SubscribeServiceImpl implements SubscribeService{
                 }
             }
             try {
-                saveSubscription(userName, mentorName, roomName);
+                saveSubscription(userName, mentorName);
                 log.info(userName + "에" + mentorName + "이 저장되었습니다");
             } catch (Exception e) {
                 log.error("DB 저장 오류");
@@ -113,7 +113,7 @@ public class SubscribeServiceImpl implements SubscribeService{
     }
 
     @Override
-    public List<Subscription> unsubscribeMentor(String mentorName, String userName, String roomName) throws Exception {
+    public List<Subscription> unsubscribeMentor(String mentorName, String userName) throws Exception {
         String queStr = "push.queue."+mentorName+"."+userName;
         try {
             rabbitAdmin.deleteQueue(queStr);
@@ -123,7 +123,7 @@ public class SubscribeServiceImpl implements SubscribeService{
             throw new QueuesNotAvailableException("큐 삭제가 실패하였습니다", e.getCause());
         }
         try {
-            deleteSubscription(userName, mentorName, roomName);
+            deleteSubscription(userName, mentorName);
             log.info("DB 삭제 완료");
         }catch (Exception e){
             log.error("DB 삭제 실패");
@@ -145,11 +145,11 @@ public class SubscribeServiceImpl implements SubscribeService{
     }
 
     @Override
-    public void saveSubscription(String userName, String mentorName, String roomName) {
+    public void saveSubscription(String userName, String mentorName) {
         // 중복 저장 방지
-        Subscription existingSubscription = userSubscribeRepository.findByUserNameAndMentorNameAndRoomName(userName, mentorName, roomName);
+        Subscription existingSubscription = userSubscribeRepository.findByUserNameAndMentorName(userName, mentorName);
         if (existingSubscription == null) {
-            Subscription subscription = new Subscription(userName, mentorName, roomName);
+            Subscription subscription = new Subscription(userName, mentorName);
             userSubscribeRepository.save(subscription);
         }else{
             log.error("이미 구독한 사용자입니다!");
@@ -157,9 +157,9 @@ public class SubscribeServiceImpl implements SubscribeService{
     }
 
     @Override
-    public void deleteSubscription(String userName, String mentorName, String roomName) {
+    public void deleteSubscription(String userName, String mentorName) {
         // 삭제 조건 확인
-        Subscription existingSubscription = userSubscribeRepository.findByUserNameAndMentorNameAndRoomName(userName, mentorName, roomName);
+        Subscription existingSubscription = userSubscribeRepository.findByUserNameAndMentorName(userName, mentorName);
         if (existingSubscription != null) {
             userSubscribeRepository.delete(existingSubscription);
             log.info("삭제 요청");

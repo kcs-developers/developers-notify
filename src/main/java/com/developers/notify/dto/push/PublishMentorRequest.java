@@ -9,5 +9,4 @@ import lombok.NoArgsConstructor;
 @Getter
 public class PublishMentorRequest {
     private String mentorName;
-    private String roomName;
 }

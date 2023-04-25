@@ -23,14 +23,9 @@ public class Subscription {
     @Column(nullable = false)
     private String mentorName;
 
-    @NonNull
-    @Column(nullable = false)
-    private String roomName;
-
     @Builder
-    public Subscription(String userName, String mentorName, String roomName){
+    public Subscription(String userName, String mentorName){
         this.userName = userName;
         this.mentorName = mentorName;
-        this.roomName = roomName;
     }
 }
