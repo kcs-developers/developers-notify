@@ -99,7 +99,7 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
         // 멘토+사용자 로 큐 생성
         String queStr = "push.schedule.queue." + mentorName + "." + userName+"."+roomName;
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         LocalDateTime notificationTime = LocalDateTime.parse(time, formatter);
 
         SseEmitter emitter = new SseEmitter(-1L);
