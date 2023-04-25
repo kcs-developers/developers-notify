@@ -25,9 +25,9 @@ public class SchedulerService {
     private final RabbitTemplate rabbitTemplate;
 
 
-    public void scheduleNotify(LocalDateTime notificationTime, String queName, String userName, SseEmitter emitter, String email, String  mentorName){
+    public void scheduleNotify(LocalDateTime notificationTime, String queName, String userName, SseEmitter emitter, String email, String  mentorName, String roomName){
         long delay = Duration.between(LocalDateTime.now(), notificationTime.minusMinutes(10)).toMillis();
-        log.info("---메시지 발송 예약---"+delay);
+        log.info(mentorName+" 의 "+roomName+" 에 대한 알림 발송 예약! "+TimeUnit.MILLISECONDS.toMinutes(delay)+" 후 발송!");
         scheduledExecutorService.schedule(() -> {
             // 모든 동적 문자열에는 push.schedule 로 추가
             String exchangeStr = "push.schedule.exchange";
@@ -35,8 +35,8 @@ public class SchedulerService {
             rabbitAdmin.declareExchange(exchange);
 
             // 사용자 큐에 메시지 발송
-                    String routeStr = "push.schedule.route." + mentorName + "." + userName+"."+mentorName;
-                    String message = "schedule-구독한 "+mentorName+" 멘토가 방을 만들었습니다!\nhttps://diveloper.site/mentoring 에서 확인하세요!";
+                    String routeStr = "push.schedule.route." + mentorName + "." + userName+"."+roomName;
+                    String message = "schedule-"+mentorName+" 멘토의 "+roomName+" 이 시작되기 10분 전입니다!\nhttps://diveloper.site/mentoring 에서 확인하세요!";
                     rabbitTemplate.convertAndSend(exchangeStr, routeStr, message);
             try {
                 messageScheduleService.subscribeToMessages(queName, userName, emitter, email);

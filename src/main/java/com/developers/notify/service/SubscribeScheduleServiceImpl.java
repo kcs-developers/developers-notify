@@ -105,7 +105,7 @@ public class SubscribeScheduleServiceImpl implements SubscribeScheduleService{
         SseEmitter emitter = new SseEmitter(-1L);
 
         try {
-            schedulerService.scheduleNotify(notificationTime, queStr, userName, emitter, email, mentorName);
+            schedulerService.scheduleNotify(notificationTime, queStr, userName, emitter, email, mentorName, roomName);
         }catch (Exception e){
             log.error("알림 스케쥴링 실패!");
             throw new EmitterException("알림이 실패하였습니다! "+e.getMessage());
